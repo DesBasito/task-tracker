@@ -28,10 +28,7 @@ public class StatusValidator implements ConstraintValidator<ValidStatus, TaskDto
 
         Optional<TaskStatus> newStatusOpt = TaskStatus.fromString(task.getStatus());
         if (newStatusOpt.isEmpty()) {
-            context.buildConstraintViolationWithTemplate(
-                            TaskStatus.getAvailableStatusesDescription())
-                    .addConstraintViolation();
-            return false;
+            return true;
         }
 
         TaskStatus newStatus = newStatusOpt.get();
@@ -52,6 +49,7 @@ public class StatusValidator implements ConstraintValidator<ValidStatus, TaskDto
                     );
 
                     context.buildConstraintViolationWithTemplate(errorMessage)
+                            .addPropertyNode("status")
                             .addConstraintViolation();
                     isValid = false;
                 }

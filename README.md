@@ -139,7 +139,7 @@ MY_EMAIL=your_email@gmail.com MY_PASSWORD="your_app_password" docker compose up 
 
 ### Доступ к сервисам:
 - **API:** http://localhost:8888 (локально) или http://localhost:9778 (Docker)
-- **Swagger UI:** http://localhost:8888/swagger-ui.html
+- **Swagger UI:** http://localhost:8888/swagger-ui.html (локально) или http://localhost:9778/swagger-ui.html (Docker)
 - **Swagger docs:** http://localhost:8888/api/v3/api-docs (для Postman проверки)
 - **Redis:** localhost:6379
 

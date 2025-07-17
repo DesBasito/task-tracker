@@ -46,7 +46,7 @@ public enum TaskStatus {
 
     public static String getAvailableStatusesDescription() {
         String statuses = Arrays.stream(TaskStatus.values())
-                .map(TaskStatus::getDescription)
+                .map(TaskStatus::name)
                 .collect(Collectors.joining(", "));
 
         return "Указан неверный статус. Доступные статусы: " + statuses;

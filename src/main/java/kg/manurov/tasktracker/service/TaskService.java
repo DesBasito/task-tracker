@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Slf4j
@@ -74,7 +75,7 @@ public class TaskService {
             existingTask.setDescription(taskDTO.getDescription());
         }
 
-        if (taskDTO.getStatus() != null) {
+        if (taskDTO.getStatus() != null && !taskDTO.getStatus().isEmpty()) {
             TaskStatus newStatus = TaskStatus.getType(taskDTO.getStatus())
                     .orElseThrow(() -> new IllegalArgumentException("Неверный статус: " + taskDTO.getStatus()));
 
@@ -82,6 +83,7 @@ public class TaskService {
                 statusManager.executeTransition(existingTask, newStatus);
             }
         }
+        existingTask.setUpdatedAt(LocalDateTime.now());
 
         Task updatedTask = taskRepository.save(existingTask);
 
@@ -102,7 +104,7 @@ public class TaskService {
         }
 
         statusManager.executeTransition(task, newStatus);
-
+        task.setUpdatedAt(LocalDateTime.now());
         Task updatedTask = taskRepository.save(task);
 
         log.info("Статус задачи {} успешно изменен с {} на {}", id, currentStatus, newStatus);
