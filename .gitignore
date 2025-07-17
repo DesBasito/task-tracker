@@ -20,8 +20,8 @@ target/
 *.ipr
 /db/*.db
 /db/*.trace.db
-logs/
-data-redis/
+/logs/
+/data-redis/*
 
 ### NetBeans ###
 /nbproject/private/
