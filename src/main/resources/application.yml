@@ -1,0 +1,68 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: task-tracker
+    version: 1.0.0
+
+  datasource:
+    url: jdbc:h2:./db/task-tracker;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    username: root
+    password: qwerty
+    driver-class-name: org.h2.Driver
+
+  liquibase:
+    change-log: classpath:/db/changelog/master.yml
+    enabled: true
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: out1of1mind1exception@gmail.com
+    password: qmwl kddb vtno igjz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 0
+  cache:
+    type: redis
+    cache-names: tasksCache
+  h2:
+    console:
+      enabled: true
+
+  output:
+    ansi:
+      enabled: always
+
+  security:
+    user:
+      name: email
+      password: password
+
+
+logging:
+  level:
+    root: info
+    org:
+      springframework:
+        security: debug
+
+  file:
+    name: logs/spring.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7

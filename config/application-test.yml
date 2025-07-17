@@ -1,0 +1,43 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    driver-class-name: org.h2.Driver
+    username:
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  liquibase:
+    enabled: false
+  h2:
+    console:
+      enabled: false
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      database: 15
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600s
+      cache-null-values: false
+
+logging:
+  level:
+    root: WARN
+    kg.manurov.tasktracker: INFO
+    org.hibernate.SQL: WARN
+    org.springframework.test: WARN

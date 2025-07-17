@@ -1,0 +1,27 @@
+networks:
+  task-tracker_net:
+
+services:
+  app:
+    container_name: task-tracker_app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "9778:9778"
+    depends_on:
+      - redis
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - task-tracker_net
+
+  redis:
+    container_name: task-tracker_redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - task-tracker_net

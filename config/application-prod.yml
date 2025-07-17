@@ -1,0 +1,42 @@
+server:
+  port: 9778
+spring:
+  application:
+    name: task-tracker
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+  datasource:
+    url: jdbc:h2:./db/task-tracker;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+    username: qwe
+    password: qwe
+    driver-class-name: org.h2.Driver
+  liquibase:
+    change-log: classpath:db/changelog/master.yml
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  data:
+    redis:
+      host: redis
+      port: 6379
+      database: 0
+  cache:
+    type: redis
+    cache-names: tasks
+logging:
+  file:
+    name: logs/app.log
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.zaxxer.hikari: ERROR
+    liquibase: ERROR
+    org.springframework.security: ERROR
+    org.springframework.cache: DEBUG
+    org.springframework.boot.context.config: DEBUG
+  logback:
+    rolling policy:
+      max-history: 5
+      max-file-size: 10MB
