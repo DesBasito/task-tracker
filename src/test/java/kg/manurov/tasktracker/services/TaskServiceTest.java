@@ -1,6 +1,6 @@
 package kg.manurov.tasktracker.services;
 
-import kg.manurov.tasktracker.domain.dto.TaskRequest;
+import kg.manurov.tasktracker.domain.dto.TaskDto;
 import kg.manurov.tasktracker.domain.enums.TaskStatus;
 import kg.manurov.tasktracker.domain.models.Task;
 import kg.manurov.tasktracker.exception.TaskNotFoundException;
@@ -43,7 +43,7 @@ class TaskServiceTest {
     private TaskService taskService;
 
     private Task testTask;
-    private TaskRequest testTaskRequest;
+    private TaskDto testTaskRequest;
     private final Long TEST_ID = 1L;
 
     @BeforeEach
@@ -56,7 +56,7 @@ class TaskServiceTest {
         testTask.setCreatedAt(LocalDateTime.now());
         testTask.setUpdatedAt(LocalDateTime.now());
 
-        testTaskRequest = new TaskRequest();
+        testTaskRequest = new TaskDto();
         testTaskRequest.setId(TEST_ID);
         testTaskRequest.setTitle("Тестовая задача");
         testTaskRequest.setDescription("Описание тестовой задачи");
@@ -67,7 +67,7 @@ class TaskServiceTest {
 
     @Test
     void createTask_Success() {
-        TaskRequest newTaskRequest = new TaskRequest();
+        TaskDto newTaskRequest = new TaskDto();
         newTaskRequest.setTitle("Новая задача");
         newTaskRequest.setDescription("Описание новой задачи");
 
@@ -75,7 +75,7 @@ class TaskServiceTest {
         when(statusManager.getStrategy(TaskStatus.PENDING)).thenReturn(statusStrategy);
         doNothing().when(statusStrategy).onEnter(any(Task.class));
 
-        TaskRequest result = taskService.createTask(newTaskRequest);
+        TaskDto result = taskService.createTask(newTaskRequest);
 
         assertNotNull(result);
         assertEquals(TEST_ID, result.getId());
@@ -90,7 +90,7 @@ class TaskServiceTest {
 
     @Test
     void createTask_WithNullTitle_SavesWithoutValidation() {
-        TaskRequest invalidTaskRequest = new TaskRequest();
+        TaskDto invalidTaskRequest = new TaskDto();
         invalidTaskRequest.setTitle(null);
         invalidTaskRequest.setDescription("Описание");
 
@@ -104,7 +104,7 @@ class TaskServiceTest {
         when(statusManager.getStrategy(TaskStatus.PENDING)).thenReturn(statusStrategy);
         doNothing().when(statusStrategy).onEnter(any(Task.class));
 
-        TaskRequest result = taskService.createTask(invalidTaskRequest);
+        TaskDto result = taskService.createTask(invalidTaskRequest);
 
         assertNotNull(result);
         assertNull(result.getTitle());
@@ -118,7 +118,7 @@ class TaskServiceTest {
 
     @Test
     void createTask_WithNullDescription_SavesSuccessfully() {
-        TaskRequest taskRequest = new TaskRequest();
+        TaskDto taskRequest = new TaskDto();
         taskRequest.setTitle("Задача без описания");
         taskRequest.setDescription(null);
 
@@ -132,7 +132,7 @@ class TaskServiceTest {
         when(statusManager.getStrategy(TaskStatus.PENDING)).thenReturn(statusStrategy);
         doNothing().when(statusStrategy).onEnter(any(Task.class));
 
-        TaskRequest result = taskService.createTask(taskRequest);
+        TaskDto result = taskService.createTask(taskRequest);
 
         assertNotNull(result);
         assertEquals("Задача без описания", result.getTitle());
@@ -144,7 +144,7 @@ class TaskServiceTest {
 
     @Test
     void createTask_WithEmptyFields_SavesSuccessfully() {
-        TaskRequest taskRequest = new TaskRequest();
+        TaskDto taskRequest = new TaskDto();
         taskRequest.setTitle("");
         taskRequest.setDescription("");
 
@@ -158,7 +158,7 @@ class TaskServiceTest {
         when(statusManager.getStrategy(TaskStatus.PENDING)).thenReturn(statusStrategy);
         doNothing().when(statusStrategy).onEnter(any(Task.class));
 
-        TaskRequest result = taskService.createTask(taskRequest);
+        TaskDto result = taskService.createTask(taskRequest);
 
         assertNotNull(result);
         assertEquals("", result.getTitle());
@@ -178,7 +178,7 @@ class TaskServiceTest {
 
         when(taskRepository.findAllByOrderByCreatedAtDesc()).thenReturn(mockTasks);
 
-        List<TaskRequest> result = taskService.getAllTasks();
+        List<TaskDto> result = taskService.getAllTasks();
 
         assertNotNull(result);
         assertEquals(3, result.size());
@@ -193,7 +193,7 @@ class TaskServiceTest {
     void getAllTasks_EmptyList() {
         when(taskRepository.findAllByOrderByCreatedAtDesc()).thenReturn(Arrays.asList());
 
-        List<TaskRequest> result = taskService.getAllTasks();
+        List<TaskDto> result = taskService.getAllTasks();
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
@@ -205,7 +205,7 @@ class TaskServiceTest {
     void getTaskById_Success() {
         when(taskRepository.findById(TEST_ID)).thenReturn(Optional.of(testTask));
 
-        TaskRequest result = taskService.getTaskById(TEST_ID);
+        TaskDto result = taskService.getTaskById(TEST_ID);
 
         assertNotNull(result);
         assertEquals(TEST_ID, result.getId());
@@ -227,7 +227,7 @@ class TaskServiceTest {
 
     @Test
     void updateTask_Success() {
-        TaskRequest updateRequest = new TaskRequest();
+        TaskDto updateRequest = new TaskDto();
         updateRequest.setTitle("Обновленная задача");
         updateRequest.setDescription("Обновленное описание");
         updateRequest.setStatus(TaskStatus.IN_PROGRESS.getDescription());
@@ -242,7 +242,7 @@ class TaskServiceTest {
         when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
         doNothing().when(statusManager).executeTransition(any(Task.class), any(TaskStatus.class));
 
-        TaskRequest result = taskService.updateTask(TEST_ID, updateRequest);
+        TaskDto result = taskService.updateTask(TEST_ID, updateRequest);
 
         assertNotNull(result);
         assertEquals("Обновленная задача", result.getTitle());
@@ -256,13 +256,13 @@ class TaskServiceTest {
 
     @Test
     void updateTask_OnlyTitle_Success() {
-        TaskRequest updateRequest = new TaskRequest();
+        TaskDto updateRequest = new TaskDto();
         updateRequest.setTitle("Только новый заголовок");
 
         when(taskRepository.findById(TEST_ID)).thenReturn(Optional.of(testTask));
         when(taskRepository.save(any(Task.class))).thenReturn(testTask);
 
-        TaskRequest result = taskService.updateTask(TEST_ID, updateRequest);
+        TaskDto result = taskService.updateTask(TEST_ID, updateRequest);
 
         assertNotNull(result);
         verify(taskRepository, times(1)).findById(TEST_ID);
@@ -272,7 +272,7 @@ class TaskServiceTest {
 
     @Test
     void updateTask_InvalidStatus_ThrowsException() {
-        TaskRequest updateRequest = new TaskRequest();
+        TaskDto updateRequest = new TaskDto();
         updateRequest.setStatus("INVALID_STATUS");
 
         when(taskRepository.findById(TEST_ID)).thenReturn(Optional.of(testTask));
@@ -287,7 +287,7 @@ class TaskServiceTest {
 
     @Test
     void updateTask_NotFound_ThrowsException() {
-        TaskRequest updateRequest = new TaskRequest();
+        TaskDto updateRequest = new TaskDto();
         updateRequest.setTitle("Обновленная задача");
 
         when(taskRepository.findById(anyLong())).thenReturn(Optional.empty());
@@ -311,7 +311,7 @@ class TaskServiceTest {
         when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
         doNothing().when(statusManager).executeTransition(any(Task.class), eq(newStatus));
 
-        TaskRequest result = taskService.changeTaskStatus(TEST_ID, newStatus);
+        TaskDto result = taskService.changeTaskStatus(TEST_ID, newStatus);
 
         assertNotNull(result);
         assertEquals(newStatus.name(), result.getStatus());
@@ -327,7 +327,7 @@ class TaskServiceTest {
 
         when(taskRepository.findById(TEST_ID)).thenReturn(Optional.of(testTask));
 
-        TaskRequest result = taskService.changeTaskStatus(TEST_ID, currentStatus);
+        TaskDto result = taskService.changeTaskStatus(TEST_ID, currentStatus);
 
         assertNotNull(result);
         assertEquals(currentStatus.name(), result.getStatus());
@@ -401,7 +401,7 @@ class TaskServiceTest {
 
         when(taskRepository.findByStatus(status.name())).thenReturn(mockTasks);
 
-        List<TaskRequest> result = taskService.getTasksByStatus(status);
+        List<TaskDto> result = taskService.getTasksByStatus(status);
 
         assertNotNull(result);
         assertEquals(2, result.size());
@@ -416,7 +416,7 @@ class TaskServiceTest {
         TaskStatus status = TaskStatus.CANCELLED;
         when(taskRepository.findByStatus(status.name())).thenReturn(Arrays.asList());
 
-        List<TaskRequest> result = taskService.getTasksByStatus(status);
+        List<TaskDto> result = taskService.getTasksByStatus(status);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());

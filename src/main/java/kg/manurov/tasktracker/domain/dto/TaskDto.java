@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TaskRequest implements Serializable {
+public class TaskDto implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 

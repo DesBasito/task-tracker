@@ -1,6 +1,6 @@
 package kg.manurov.tasktracker.validations;
 
-import kg.manurov.tasktracker.domain.dto.TaskRequest;
+import kg.manurov.tasktracker.domain.dto.TaskDto;
 import kg.manurov.tasktracker.domain.enums.TaskStatus;
 import kg.manurov.tasktracker.domain.models.Task;
 import kg.manurov.tasktracker.repositories.TaskRepository;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class StatusValidator implements ConstraintValidator<ValidStatus, TaskRequest> {
+public class StatusValidator implements ConstraintValidator<ValidStatus, TaskDto> {
 
     private final TaskRepository taskRepository;
     private final TaskStatusManager statusManager;
@@ -22,7 +22,7 @@ public class StatusValidator implements ConstraintValidator<ValidStatus, TaskReq
 
 
     @Override
-    public boolean isValid(TaskRequest task, ConstraintValidatorContext context) {
+    public boolean isValid(TaskDto task, ConstraintValidatorContext context) {
         boolean isValid = true;
         context.disableDefaultConstraintViolation();
 

@@ -1,7 +1,7 @@
 package kg.manurov.tasktracker.service;
 
+import kg.manurov.tasktracker.domain.dto.TaskDto;
 import kg.manurov.tasktracker.domain.enums.TaskStatus;
-import kg.manurov.tasktracker.domain.dto.TaskRequest;
 import kg.manurov.tasktracker.domain.models.Task;
 import kg.manurov.tasktracker.exception.TaskNotFoundException;
 import kg.manurov.tasktracker.repositories.TaskRepository;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,7 +21,7 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final TaskStatusManager statusManager;
 
-    public TaskRequest createTask(TaskRequest taskDTO) {
+    public TaskDto createTask(TaskDto taskDTO) {
         log.info("Создание новой задачи: {}", taskDTO.getTitle());
 
         Task task = convertToEntity(taskDTO);
@@ -39,7 +38,7 @@ public class TaskService {
 
 
     @Cacheable(value = "tasksCache", key = "'all_tasks'")
-    public List<TaskRequest> getAllTasks() {
+    public List<TaskDto> getAllTasks() {
         log.info("Получение списка всех задач");
 
         List<Task> tasks = taskRepository.findAllByOrderByCreatedAtDesc();
@@ -52,7 +51,7 @@ public class TaskService {
 
 
     @Transactional(readOnly = true)
-    public TaskRequest getTaskById(Long id) {
+    public TaskDto getTaskById(Long id) {
         log.info("Поиск задачи с ID: {}", id);
 
         Task task = findTaskById(id);
@@ -62,7 +61,7 @@ public class TaskService {
     }
 
 
-    public TaskRequest updateTask(Long id, TaskRequest taskDTO) {
+    public TaskDto updateTask(Long id, TaskDto taskDTO) {
         log.info("Обновление задачи с ID: {}", id);
 
         Task existingTask = findTaskById(id);
@@ -91,7 +90,7 @@ public class TaskService {
     }
 
 
-    public TaskRequest changeTaskStatus(Long id, TaskStatus newStatus) {
+    public TaskDto changeTaskStatus(Long id, TaskStatus newStatus) {
         log.info("Изменение статуса задачи {} на {}", id, newStatus);
 
         Task task = findTaskById(id);
@@ -126,7 +125,7 @@ public class TaskService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskRequest> getTasksByStatus(TaskStatus status) {
+    public List<TaskDto> getTasksByStatus(TaskStatus status) {
         log.info("Поиск задач по статусу: {}", status);
 
         List<Task> tasks = taskRepository.findByStatus(status.name());
@@ -154,8 +153,8 @@ public class TaskService {
                 });
     }
 
-    private TaskRequest convertToDTO(Task task) {
-        TaskRequest dto = new TaskRequest();
+    private TaskDto convertToDTO(Task task) {
+        TaskDto dto = new TaskDto();
         dto.setId(task.getId());
         dto.setTitle(task.getTitle());
         dto.setDescription(task.getDescription());
@@ -165,7 +164,7 @@ public class TaskService {
         return dto;
     }
 
-    private Task convertToEntity(TaskRequest dto) {
+    private Task convertToEntity(TaskDto dto) {
         Task task = new Task();
         task.setTitle(dto.getTitle());
         task.setDescription(dto.getDescription());

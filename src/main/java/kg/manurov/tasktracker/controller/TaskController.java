@@ -1,7 +1,7 @@
 package kg.manurov.tasktracker.controller;
 
+import kg.manurov.tasktracker.domain.dto.TaskDto;
 import kg.manurov.tasktracker.domain.enums.TaskStatus;
-import kg.manurov.tasktracker.domain.dto.TaskRequest;
 import kg.manurov.tasktracker.service.TaskService;
 import kg.manurov.tasktracker.service.TaskStatusManager;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,20 +42,20 @@ public class TaskController {
                     description = "Задача успешно создана",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TaskRequest.class)
+                            schema = @Schema(implementation = TaskDto.class)
                     )
             ),
             @ApiResponse(responseCode = "401", description = "Не авторизован")
     })
     @PostMapping
-    public ResponseEntity<TaskRequest> createTask(
+    public ResponseEntity<TaskDto> createTask(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "Данные для создания задачи",
                     required = true)
-            @Valid @RequestBody TaskRequest taskDTO) {
+            @Valid @RequestBody TaskDto taskDTO) {
         log.info("Получен запрос на создание задачи: {}", taskDTO.getTitle());
 
-        TaskRequest createdTask = taskService.createTask(taskDTO);
+        TaskDto createdTask = taskService.createTask(taskDTO);
 
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
@@ -70,13 +70,13 @@ public class TaskController {
                     description = "Список задач успешно получен",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TaskRequest.class)
+                            schema = @Schema(implementation = TaskDto.class)
                     )
             ),
             @ApiResponse(responseCode = "401", description = "Не авторизован")
     })
     @GetMapping
-    public ResponseEntity<List<TaskRequest>> getAllTasks() {
+    public ResponseEntity<List<TaskDto>> getAllTasks() {
         log.info("Получен запрос на получение всех задач");
         return ResponseEntity.ok(taskService.getAllTasks());
     }
@@ -90,11 +90,11 @@ public class TaskController {
                     description = "Задача найдена",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TaskRequest.class))),
+                            schema = @Schema(implementation = TaskDto.class))),
             @ApiResponse(responseCode = "401", description = "Не авторизован")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<TaskRequest> getTaskById(
+    public ResponseEntity<TaskDto> getTaskById(
             @Parameter(description = "ID задачи", required = true, example = "1")
             @PathVariable Long id) {
         log.info("Получен запрос на получение задачи с ID: {}", id);
@@ -111,7 +111,7 @@ public class TaskController {
                     description = "Задача успешно обновлена",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TaskRequest.class)
+                            schema = @Schema(implementation = TaskDto.class)
                     )
             ),
             @ApiResponse(responseCode = "400", description = "Неверные данные запроса"),
@@ -119,7 +119,7 @@ public class TaskController {
             @ApiResponse(responseCode = "401", description = "Не авторизован")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<TaskRequest> updateTask(
+    public ResponseEntity<TaskDto> updateTask(
             @Parameter(description = "ID задачи", required = true, example = "1")
             @PathVariable Long id,
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
@@ -127,12 +127,12 @@ public class TaskController {
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TaskRequest.class)
+                            schema = @Schema(implementation = TaskDto.class)
                     )
             )
-            @Valid @RequestBody TaskRequest taskDTO) {
+            @Valid @RequestBody TaskDto taskDTO) {
         log.info("Получен запрос на обновление задачи с ID: {}", id);
-        TaskRequest updatedTask = taskService.updateTask(id, taskDTO);
+        TaskDto updatedTask = taskService.updateTask(id, taskDTO);
         return ResponseEntity.ok(updatedTask);
     }
 
@@ -146,12 +146,12 @@ public class TaskController {
             description = "Статус успешно изменен",
             content = @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = TaskRequest.class)
+                    schema = @Schema(implementation = TaskDto.class)
             )
     )
     @ApiResponse(responseCode = "401", description = "Не авторизован")
     @PatchMapping("/{id}/status")
-    public ResponseEntity<TaskRequest> changeTaskStatus(
+    public ResponseEntity<TaskDto> changeTaskStatus(
             @Parameter(description = "ID задачи", required = true, example = "1")
             @PathVariable Long id,
             @RequestParam String statusRequest) {
@@ -160,7 +160,7 @@ public class TaskController {
         TaskStatus newStatus = TaskStatus.getType(statusRequest)
                 .orElseThrow(() -> new IllegalArgumentException("Неверный статус: " + statusRequest));
 
-        TaskRequest updatedTask = taskService.changeTaskStatus(id, newStatus);
+        TaskDto updatedTask = taskService.changeTaskStatus(id, newStatus);
 
         return ResponseEntity.ok(updatedTask);
     }
@@ -195,14 +195,14 @@ public class TaskController {
                     description = "Список задач успешно получен",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = TaskRequest.class)
+                            schema = @Schema(implementation = TaskDto.class)
                     )
             ),
             @ApiResponse(responseCode = "400", description = "Неверный статус"),
             @ApiResponse(responseCode = "401", description = "Не авторизован")
     })
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<TaskRequest>> getTasksByStatus(
+    public ResponseEntity<List<TaskDto>> getTasksByStatus(
             @Parameter(
                     description = "Статус задачи",
                     required = true,
@@ -215,7 +215,7 @@ public class TaskController {
         TaskStatus taskStatus = TaskStatus.fromString(status)
                 .orElseThrow(() -> new IllegalArgumentException("Неверный статус: " + status));
 
-        List<TaskRequest> tasks = taskService.getTasksByStatus(taskStatus);
+        List<TaskDto> tasks = taskService.getTasksByStatus(taskStatus);
 
         return ResponseEntity.ok(tasks);
     }
