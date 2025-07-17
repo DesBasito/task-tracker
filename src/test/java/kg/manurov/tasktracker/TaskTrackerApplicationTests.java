@@ -47,6 +47,10 @@ class TaskTrackerApplicationTests {
         assertThat(applicationContext.containsBean("redisCacheManagerBuilderCustomizer")).isTrue();
         assertThat(applicationContext.containsBean("customOpenAPI")).isTrue();
         assertThat(applicationContext.containsBean("emailService")).isTrue();
+        assertThat(applicationContext.containsBean("restTemplateConfig")).isTrue();
+        assertThat(applicationContext.containsBean("restTemplate")).isTrue();
+        assertThat(applicationContext.containsBean("apiService")).isTrue();
+        assertThat(applicationContext.containsBean("apiController")).isTrue();
     }
 
 }
