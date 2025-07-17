@@ -5,10 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
+@TestPropertySource(properties = {
+        "spring.mail.host=smtp.test.com",
+        "spring.mail.port=587",
+        "spring.mail.username=test@test.com",
+        "spring.mail.password=testpassword"
+})
 class TaskTrackerApplicationTests {
 
     @Autowired
@@ -37,6 +46,7 @@ class TaskTrackerApplicationTests {
         assertThat(applicationContext.containsBean("cacheConfiguration")).isTrue();
         assertThat(applicationContext.containsBean("redisCacheManagerBuilderCustomizer")).isTrue();
         assertThat(applicationContext.containsBean("customOpenAPI")).isTrue();
+        assertThat(applicationContext.containsBean("emailService")).isTrue();
     }
 
 }

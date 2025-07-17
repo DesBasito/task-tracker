@@ -154,6 +154,7 @@ public class TaskController {
     public ResponseEntity<TaskDto> changeTaskStatus(
             @Parameter(description = "ID задачи", required = true, example = "1")
             @PathVariable Long id,
+            @Parameter(description = "Статус на которую хотите изменить", required = true, example = "В ожидании | В процессе | Завершена | Отменена")
             @RequestParam String statusRequest) {
         log.info("Получен запрос на изменение статуса задачи {}", id);
 

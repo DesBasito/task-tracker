@@ -35,7 +35,6 @@ class TaskRepositoryTest {
         entityManager.flush();
         entityManager.clear();
 
-        // Создаем тестовые задачи
         testTask1 = createTask("Первая задача", "Описание первой задачи", TaskStatus.PENDING);
         testTask2 = createTask("Вторая задача", "Описание второй задачи", TaskStatus.IN_PROGRESS);
         testTask3 = createTask("Третья задача", "Описание третьей задачи", TaskStatus.COMPLETED);
@@ -85,7 +84,6 @@ class TaskRepositoryTest {
         assertNotNull(savedTask.getCreatedAt());
         assertNotNull(savedTask.getUpdatedAt());
 
-        // Проверяем, что задача действительно сохранена в базе
         Optional<Task> retrievedTask = taskRepository.findById(savedTask.getId());
         assertTrue(retrievedTask.isPresent());
         assertEquals(savedTask.getTitle(), retrievedTask.get().getTitle());
@@ -246,7 +244,6 @@ class TaskRepositoryTest {
         entityManager.persistAndFlush(testTask2);
         entityManager.persistAndFlush(testTask3);
 
-        // Проверяем, что задачи существуют
         assertEquals(3, taskRepository.count());
 
         taskRepository.deleteAll();
