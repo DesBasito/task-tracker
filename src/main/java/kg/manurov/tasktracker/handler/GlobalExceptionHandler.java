@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
                 .body(ex.getMessage());
     }
 
+
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<String> handle(IllegalStateException ex){
         return ResponseEntity

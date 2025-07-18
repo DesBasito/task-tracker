@@ -38,21 +38,16 @@ public class PendingStatusStrategy implements TaskStatusStrategy {
 
         log.info("Переход задачи {} из статуса PENDING в {}", task.getId(), newStatus);
 
-        // Логика выхода из текущего статуса
         onExit(task);
 
-        // Изменяем статус
         task.setStatus(newStatus.name());
 
-        // Дополнительная логика в зависимости от целевого статуса
         switch (newStatus) {
             case IN_PROGRESS -> {
                 log.info("Задача {} начата в работу", task.getId());
-                // Можно добавить логику: уведомления, аудит, и т.д.
             }
             case CANCELLED -> {
                 log.info("Задача {} отменена из очереди", task.getId());
-                // Логика отмены: освобождение ресурсов, уведомления
             }
         }
     }
@@ -70,12 +65,10 @@ public class PendingStatusStrategy implements TaskStatusStrategy {
     @Override
     public void onEnter(Task task) {
         log.debug("Задача {} помещена в очередь ожидания", task.getId());
-        // Логика при входе в статус: добавление в очередь, уведомления
     }
 
     @Override
     public void onExit(Task task) {
         log.debug("Задача {} покидает очередь ожидания", task.getId());
-        // Логика при выходе: удаление из очереди
     }
 }

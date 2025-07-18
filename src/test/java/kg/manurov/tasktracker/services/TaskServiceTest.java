@@ -230,7 +230,7 @@ class TaskServiceTest {
         TaskDto updateRequest = new TaskDto();
         updateRequest.setTitle("Обновленная задача");
         updateRequest.setDescription("Обновленное описание");
-        updateRequest.setStatus(TaskStatus.IN_PROGRESS.getDescription());
+        updateRequest.setStatus(TaskStatus.IN_PROGRESS.name());
 
         Task updatedTask = new Task();
         updatedTask.setId(TEST_ID);

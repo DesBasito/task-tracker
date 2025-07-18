@@ -9,9 +9,6 @@ public interface TaskStatusStrategy {
 
     TaskStatus getStatus();
 
-    /**
-     * Возвращает множество статусов, на которые можно перейти из текущего
-     */
     Set<TaskStatus> getAllowedTransitions();
 
     boolean canTransitionTo(TaskStatus newStatus);
@@ -26,11 +23,7 @@ public interface TaskStatusStrategy {
         return getAllowedTransitions().isEmpty();
     }
 
-    default void onEnter(Task task) {
-        // По умолчанию ничего не делаем
-    }
+    default void onEnter(Task task) {}
 
-    default void onExit(Task task) {
-        // По умолчанию ничего не делаем
-    }
+    default void onExit(Task task) {}
 }
