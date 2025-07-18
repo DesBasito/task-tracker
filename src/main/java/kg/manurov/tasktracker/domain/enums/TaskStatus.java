@@ -35,14 +35,6 @@ public enum TaskStatus {
                 .findFirst();
     }
 
-    public static Optional<TaskStatus> getType(String value) {
-        for (TaskStatus type : TaskStatus.values()) {
-            if (type.getDescription().equalsIgnoreCase(value.strip())) {
-                return Optional.of(type);
-            }
-        }
-        throw new IllegalArgumentException(String.format("Тип %s не найден", value));
-    }
 
     public static String getAvailableStatusesDescription() {
         String statuses = Arrays.stream(TaskStatus.values())

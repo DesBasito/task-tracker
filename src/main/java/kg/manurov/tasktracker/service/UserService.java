@@ -4,7 +4,6 @@ import kg.manurov.tasktracker.domain.dto.RegistrationDto;
 import kg.manurov.tasktracker.domain.models.User;
 import kg.manurov.tasktracker.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -31,10 +30,6 @@ public class UserService implements UserDetailsService {
         return repository.save(user);
     }
 
-    public User getByEmail(String email) {
-        return repository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь не найден с email: " + email));
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

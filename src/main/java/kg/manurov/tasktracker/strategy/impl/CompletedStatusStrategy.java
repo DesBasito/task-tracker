@@ -19,13 +19,12 @@ public class CompletedStatusStrategy implements TaskStatusStrategy {
 
     @Override
     public Set<TaskStatus> getAllowedTransitions() {
-        // Завершенные задачи нельзя изменить (финальный статус)
         return Set.of();
     }
 
     @Override
     public boolean canTransitionTo(TaskStatus newStatus) {
-        return false; // Из завершенного статуса нельзя никуда перейти
+        return false;
     }
 
     @Override
@@ -53,18 +52,10 @@ public class CompletedStatusStrategy implements TaskStatusStrategy {
     @Override
     public void onEnter(Task task) {
         log.info("Задача {} успешно завершена и зафиксирована", task.getId());
-        // Логика при входе: архивирование, финальные уведомления, метрики
-
-        // Можно добавить дополнительную логику:
-        // - Сохранение в архив
-        // - Отправка уведомлений заинтересованным сторонам
-        // - Обновление статистики
-        // - Освобождение всех связанных ресурсов
     }
 
     @Override
     public void onExit(Task task) {
-        // Этот метод не должен вызываться для финального статуса
         log.warn("Попытка выхода из финального статуса COMPLETED для задачи {}", task.getId());
     }
 }

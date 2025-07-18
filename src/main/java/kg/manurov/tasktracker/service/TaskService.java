@@ -76,7 +76,7 @@ public class TaskService {
         }
 
         if (taskDTO.getStatus() != null && !taskDTO.getStatus().isEmpty()) {
-            TaskStatus newStatus = TaskStatus.getType(taskDTO.getStatus())
+            TaskStatus newStatus = TaskStatus.fromString(taskDTO.getStatus())
                     .orElseThrow(() -> new IllegalArgumentException("Неверный статус: " + taskDTO.getStatus()));
 
             if (oldStatus != newStatus) {

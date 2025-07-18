@@ -81,17 +81,4 @@ public class TaskStatusManager {
     public boolean isFinalStatus(TaskStatus status) {
         return getStrategy(status).isFinal();
     }
-
-
-    public void validateTransition(TaskStatus fromStatus, TaskStatus toStatus) {
-        if (!canTransition(fromStatus, toStatus)) {
-            TaskStatusStrategy strategy = getStrategy(fromStatus);
-            throw new IllegalStateException(
-                    String.format("Невозможно изменить статус с '%s' на '%s'. %s",
-                            strategy.getStatusDescription(),
-                            getStrategy(toStatus).getStatusDescription(),
-                            strategy.getTransitionDescription())
-            );
-        }
-    }
 }
