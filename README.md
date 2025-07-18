@@ -184,7 +184,7 @@ src/
 │   │   └── validations/     # Кастомные валидаторы
 │   └── resources/
 │       ├── db/changelog/    # Liquibase миграции
-│       └── templates/       # Email шаблоны
+│   
 └── test/                   # Тесты
 ```
 
